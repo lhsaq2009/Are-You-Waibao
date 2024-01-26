@@ -1,0 +1,45 @@
+name: CI Github Pages
+run-name: ${{ github.actor }} Build And Deploy
+
+on:
+  push:
+    branches: [ "master", "main" ]          # 只有推送这些分支才会触发
+  pull_request:
+    branches: [ "master", "main" ]          # PR 合并提交
+
+  workflow_dispatch:                        # ( 可选 ) 允许从 “操作” 选项卡手动运行此工作流
+
+permissions:
+  contents: write                           # 设置权限 ( 文件是可以被读写修改的 )
+  id-token: write
+  pages: write
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest                  # 运行环境，操作系统环境
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4.1.1       # https://github.com/marketplace/actions/checkout
+
+      - name: Setup pnpm                    # https://github.com/marketplace/actions/setup-pnpm?version=v2.4.0
+        uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
+
+      - name: Install and Build
+        run: |                              # 或 操作符
+          pnpm install
+          pnpm run build
+
+      - name: Upload GitHub Pages artifact  # https://github.com/marketplace/actions/upload-github-pages-artifact
+        uses: actions/upload-pages-artifact@v3.0.0
+        with:
+          path: "./dist"                    # 默认 _site/
+
+      - name: Deploy GitHub Pages site
+        uses: actions/deploy-pages@v4.0.3   # https://github.com/marketplace/actions/deploy-github-pages-site
+        with:
+          token: ${{ github.token }}        # 好像无需手动设置
+          artifact_name: 'github-pages'     # 缺省值：'github-pages'
