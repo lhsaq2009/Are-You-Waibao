@@ -104,6 +104,7 @@
                     return;
                 }
 
+                this.count = 0;
                 // 使用正则表达式进行全局替换，并添加样式
                 const regex = new RegExp(this.searchKeyword, 'gi');
                 this.highlightedText = this.originalText.replace(regex, match => {
