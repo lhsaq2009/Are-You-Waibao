@@ -2,7 +2,7 @@
     <div style="height: 100vh;">
         <el-container>
 
-            <el-header>
+            <el-header style="height: 5vh;">
                 <el-row style="height: 100%;">
                     <el-col :span="24" style="display: flex; justify-content: center; align-items: center;">
                         <div class="header_title">互联网外包公司名单
@@ -161,10 +161,6 @@ html {
     font-size: 16px; /* 设置默认字体大小 */
 }
 
-.el-header {
-    height: 15vh;
-}
-
 .header_title {
     font-size: 2em;
 }
@@ -176,10 +172,6 @@ html {
 @media screen and (max-width: 768px) {
     html {
         font-size: 14px; /* 在小屏幕下设置较小的字体大小 */
-    }
-
-    .el-header {
-        height: 5vh;
     }
 
     .el-main {
@@ -198,10 +190,6 @@ html {
 @media screen and (max-width: 480px) {
     html {
         font-size: 12px; /* 在更小的屏幕下设置更小的字体大小 */
-    }
-
-    .el-header {
-        height: 5vh;
     }
 
     .header_title {
