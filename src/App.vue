@@ -3,13 +3,12 @@
         <el-container>
 
             <el-header>
-                <el-row style="height: 100%; display: flex; align-items: center; justify-content: center;">
-                    <el-col :span="24" style="display: flex;align-content: center;justify-content: center;
-                    text-align: center; font-size: 30px;">
-                        <div style="display: inline-block;">互联网外包公司名单</div>
-                        <div style="display: flex; justify-content: center; align-items: center;position: absolute; right: 12px;">
-                            <a href="https://github.com/lhsaq2009/Are-You-Waibao/issues" target="_blank" style="height: 32px; width: 32px;">
-                                <svg height="1.2em" viewBox="-1 -1 20 20" width="1.2em" data-view-component="true" class="octicon octicon-mark-github v-align-middle color-fg-default">
+                <el-row style="height: 100%;">
+                    <el-col :span="24" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="header_title">互联网外包公司名单
+                            <a style="display: inline-block;"
+                               href="https://github.com/lhsaq2009/Are-You-Waibao/issues" target="_blank">
+                                <svg viewBox="-1 -1 18 18" style="height: 100%;">
                                     <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
                                 </svg>
                             </a>
@@ -24,13 +23,13 @@
                 <el-row style="margin-bottom: 18px;">
                     <el-col :span="24">
                         <el-card class="box-card">
-                            <el-row :gutter="20">
-                                <el-col :span="12" :offset="6">
+                            <el-row style="display: flex; justify-content: center; align-items: center;">
+                                <el-col :span="getColumnSpan">
                                     <el-form :inline="true" style="padding: 0 12px;
                                              display: flex; justify-content: center; align-items: center;">
-                                        <el-form-item label="查询公司" style="flex-grow:1; margin-bottom: 0;">
+                                        <el-form-item label="查询公司" style="flex-grow:0.5; margin-bottom: 0;">
                                             <el-input v-model="searchKeyword" placeholder="请输入公司名称"
-                                                      show-word-limit clearable
+                                                      show-word-limit clearable size="default"
                                                       @input="highlightKeywords" @clear="reset"
                                                       style="max-width: 600px;"></el-input>
                                             <span v-if="trimmedSearchKeyword"
@@ -49,15 +48,15 @@
                 <el-row style="margin-bottom: 18px;">
                     <el-col :span="24">
                         <el-card class="box-card">
-                            <blockquote style=" text-align: right; color: #999; margin: 0 0 12px 0; font-size: 12px;">
+                            <blockquote style=" text-align: right; color: #999; margin: 0 0 12px 0; ">
                                 <span>
                                     欢迎
                                     <a href="https://github.com/lhsaq2009/Are-You-Waibao/issues" target="_blank">Issues</a>
-                                    提交新名单，我会定期整理合并，更新时间：2024-01-26
+                                    提交新名单，更新：2024-01-27
                                 </span>
                             </blockquote>
 
-                            <div v-html="highlightedText"></div>
+                            <div v-html="highlightedText" style="font-size: 1em;"></div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -76,83 +75,157 @@
 
 <script>
 
-    import {ElMessage} from "element-plus";
+import {ElMessage} from "element-plus";
 
-    export default {
-        data() {
-            return {
-                count: 0,
-                searchKeyword: "",
-                originalText: "",
-                highlightedText: ""
-            };
+export default {
+    data() {
+        return {
+            count: 0,
+            searchKeyword: "",
+            originalText: "",
+            highlightedText: "",
+
+            screenWidth: window.innerWidth
+        };
+    },
+
+    methods: {
+        reset() {
+            this.highlightedText = this.originalText;
+            this.count = 0;
         },
-        computed: {
-            trimmedSearchKeyword() {
-                return this.searchKeyword.trim();
+        highlightKeywords() {
+
+            if (this.searchKeyword.trim().length === 0) {
+                this.reset();
+                return;
             }
-        },
-        methods: {
-            reset() {
-                this.highlightedText = this.originalText;
-                this.count = 0;
-            },
-            highlightKeywords() {
 
-                if (this.searchKeyword.trim().length === 0) {
-                    this.reset();
-                    return;
-                }
-
-                this.count = 0;
-                // 使用正则表达式进行全局替换，并添加样式
-                const regex = new RegExp(this.searchKeyword, 'gi');
-                this.highlightedText = this.originalText.replace(regex, match => {
-                    this.count++;
-                    return `<span class="yellow">${match}</span>`;
-                });
-            }
-        },
-        created() {
-
-            // 定期更新此文件内容
-            fetch('https://raw.githubusercontent.com/lhsaq2009/Are-You-Waibao/master/public/companies.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const processedArray = data.split(/[\n,，|\s]+/)
-                        .filter(item => item.trim() !== '*')
-                        .filter(item => item.trim() !== '')
-                        .filter((item, index, array) => array.indexOf(item) === index); // 移除重复项
-
-                    processedArray.sort((a, b) => {
-                        const nameA = a.toUpperCase();                                  // 不区分大小写
-                        const nameB = b.toUpperCase();
-
-                        if (nameA < nameB) {
-                            return -1;
-                        }
-                        if (nameA > nameB) {
-                            return 1;
-                        }
-                        return 0;
-                    });
-
-                    this.highlightedText = this.originalText = processedArray.join(",　");
-                })
-                .catch(error => {
-                    ElMessage.error('Oops, Error fetching file content.');
-                    console.error('Oops, Error fetching file content.', error);
-                });
+            this.count = 0;
+            // 使用正则表达式进行全局替换，并添加样式
+            const regex = new RegExp(this.searchKeyword, 'gi');
+            this.highlightedText = this.originalText.replace(regex, match => {
+                this.count++;
+                return `<span class="yellow">${match}</span>`;
+            });
         }
-    };
+    },
+    created() {
+
+        // 异步函数，定期更新此文件内容
+        fetch('https://raw.githubusercontent.com/lhsaq2009/Are-You-Waibao/master/public/companies.txt')
+            .then(response => response.text())
+            .then(data => {
+                const processedArray = data.split(/[\n,，|\s]+/)
+                    .filter(item => item.trim() !== '*')
+                    .filter(item => item.trim() !== '')
+                    .filter((item, index, array) => array.indexOf(item) === index); // 移除重复项
+
+                processedArray.sort((a, b) => {
+                    const nameA = a.toUpperCase();                                  // 不区分大小写
+                    const nameB = b.toUpperCase();
+
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                this.highlightedText = this.originalText = processedArray.join(",　");
+            })
+            .catch(error => {
+                ElMessage.error('Oops, Error fetching file content.');
+                console.error('Oops, Error fetching file content.', error);
+            });
+    },
+    computed: {
+        trimmedSearchKeyword() {
+            return this.searchKeyword.trim();
+        },
+
+        getColumnSpan() {
+            return this.screenWidth < 768 ? 24 : 16;
+        },
+    },
+    mounted() {
+        this.screenWidth = window.innerWidth;
+    },
+};
 </script>
 
 <style>
-    .box-card {
-        width: 100%;
+html {
+    font-size: 16px; /* 设置默认字体大小 */
+}
+
+.el-header {
+    height: 15vh;
+}
+
+.header_title {
+    font-size: 2em;
+}
+
+.blockquote {
+    font-size: 0.8em;
+}
+
+@media screen and (max-width: 768px) {
+    html {
+        font-size: 14px; /* 在小屏幕下设置较小的字体大小 */
     }
 
-    .yellow {
-        background-color: yellow;
+    .el-header {
+        height: 5vh;
     }
+
+    .el-main {
+        --el-main-padding: 16px;
+    }
+
+    .el-card {
+        --el-card-padding: 12px;
+    }
+
+    .el-input__inner {
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    html {
+        font-size: 12px; /* 在更小的屏幕下设置更小的字体大小 */
+    }
+
+    .el-header {
+        height: 5vh;
+    }
+
+    .header_title {
+        font-size: 1.6em;
+    }
+
+    .el-main {
+        --el-main-padding: 16px;
+    }
+
+    .el-card {
+        --el-card-padding: 12px;
+    }
+
+    .el-form-item__label {
+        font-size: 1em;
+    }
+}
+
+.box-card {
+    width: 100%;
+}
+
+.yellow {
+    background-color: yellow;
+}
 </style>
