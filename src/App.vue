@@ -56,6 +56,13 @@
                                 </span>
                             </blockquote>
 
+                            <div class="content">
+                                <section id="main">
+                                    <video id="player" src="https://dwz.mk/MVZVjy"
+                                           autoplay controls="controls" width="100%" height="400px">
+                                    </video>
+                                </section>
+                            </div>
                             <div v-html="highlightedText" style="font-size: 1em;"></div>
                         </el-card>
                     </el-col>
@@ -85,7 +92,8 @@ export default {
             originalText: "",
             highlightedText: "",
 
-            screenWidth: window.innerWidth
+            screenWidth: window.innerWidth,
+            player: null
         };
     },
 
@@ -108,6 +116,19 @@ export default {
                 this.count++;
                 return `<span class="yellow">${match}</span>`;
             });
+        },
+
+        bindEvents() {
+            const player = this.player;
+            player.addEventListener('error', this.random);
+            player.addEventListener('ended', () => {
+                this.random();
+            });
+        },
+        random() {
+            const player = this.player;
+            player.src = 'http://v.nrzj.vip/video.php?_t=' + Math.random();
+            player.play();
         }
     },
     created() {
@@ -152,6 +173,10 @@ export default {
     },
     mounted() {
         this.screenWidth = window.innerWidth;
+
+        this.player = document.getElementById('player');
+        this.bindEvents();
+        this.random();
     },
 };
 </script>
@@ -215,5 +240,12 @@ html {
 
 .yellow {
     background-color: yellow;
+}
+
+.content {
+    float: left;
+    width: 260px;
+    height: 400px;
+    background-color: white;
 }
 </style>
