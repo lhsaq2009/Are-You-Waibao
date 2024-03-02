@@ -247,5 +247,6 @@ html {
     width: 260px;
     height: 400px;
     background-color: white;
+    margin-right: 6px;
 }
 </style>
