@@ -52,7 +52,7 @@
                                 <span>
                                     欢迎
                                     <a href="https://github.com/lhsaq2009/Are-You-Waibao/issues" target="_blank">Issues</a>
-                                    提交新名单，更新：2024-01-27
+                                    提交新名单，更新：2024-05-31
                                 </span>
                             </blockquote>
 
